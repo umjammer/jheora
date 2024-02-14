@@ -51,19 +51,24 @@ public class YUVBuffer implements ImageProducer {
 
     private ColorModel colorModel = ColorModel.getRGBdefault();
 
+    @Override
     public void addConsumer(ImageConsumer ic) {
     }
 
+    @Override
     public boolean isConsumer(ImageConsumer ic) {
         return false;
     }
 
+    @Override
     public void removeConsumer(ImageConsumer ic) {
     }
 
+    @Override
     public void requestTopDownLeftRightResend(ImageConsumer ic) {
     }
 
+    @Override
     public void startProduction(ImageConsumer ic) {
         ic.setColorModel(colorModel);
         ic.setHints(ImageConsumer.TOPDOWNLEFTRIGHT |
@@ -185,7 +190,7 @@ public class YUVBuffer implements ImageProducer {
         }
     }
 
-    private static final short clamp255(int val) {
+    private static short clamp255(int val) {
         val -= 255;
         val = -(255 + ((val >> (31)) & val));
         return (short) -((val >> 31) & val);

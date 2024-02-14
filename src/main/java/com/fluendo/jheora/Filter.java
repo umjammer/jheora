@@ -75,7 +75,7 @@ public final class Filter {
         SetupBoundingValueArray_Generic(FLimit);
     }
 
-    private static final short clamp255(int val) {
+    private static short clamp255(int val) {
         val -= 255;
         val = -(255 + ((val >> (31)) & val));
         return (short) -((val >> 31) & val);
@@ -184,9 +184,9 @@ public final class Filter {
 
             i = FromFragment;
 
-            /**************************************************************
-             First Row
-             **************************************************************/
+            // ----
+            // First Row
+            // ----
             /* first column conditions */
       /* only do 2 prediction if fragment coded and on non intra or if
          all fragments are intra */
@@ -208,7 +208,7 @@ public final class Filter {
             }
             i++;
 
-            /***************************************************************/
+            // ----
             /* middle columns  */
             for (n = 1; n < FragsAcross - 1; n++) {
                 if (pbi.display_fragments[i] != 0) {
@@ -237,7 +237,7 @@ public final class Filter {
                 i++;
             }
 
-            /***************************************************************/
+            // ----
             /* Last Column */
             if (pbi.display_fragments[i] != 0) {
                 /* Filter Left edge always */
@@ -254,12 +254,12 @@ public final class Filter {
             }
             i++;
 
-            /***************************************************************/
+            // ----
             /* Middle Rows */
-            /***************************************************************/
+            // ----
             for (m = 1; m < FragsDown - 1; m++) {
 
-                /*****************************************************************/
+                // ----
                 /* first column conditions */
         /* only do 2 prediction if fragment coded and on non intra or if
            all fragments are intra */
@@ -286,7 +286,7 @@ public final class Filter {
                 }
                 i++;
 
-                /*****************************************************************/
+                // ----
                 /* middle columns  */
                 for (n = 1; n < FragsAcross - 1; n++, i++) {
 
@@ -316,7 +316,7 @@ public final class Filter {
                     }
                 }
 
-                /******************************************************************/
+                // ----
                 /* Last Column */
                 if (pbi.display_fragments[i] != 0) {
                     index = pbi.recon_pixel_index_table[i];
@@ -339,7 +339,7 @@ public final class Filter {
                 i++;
             }
 
-            /*******************************************************************/
+            // ----
             /* Last Row  */
 
             /* first column conditions */
@@ -361,7 +361,7 @@ public final class Filter {
             }
             i++;
 
-            /******************************************************************/
+            // ----
             /* middle columns  */
             for (n = 1; n < FragsAcross - 1; n++, i++) {
                 if (pbi.display_fragments[i] != 0) {
@@ -384,7 +384,7 @@ public final class Filter {
                 }
             }
 
-            /******************************************************************/
+            // ----
             /* Last Column */
             if (pbi.display_fragments[i] != 0) {
                 index = pbi.recon_pixel_index_table[i];

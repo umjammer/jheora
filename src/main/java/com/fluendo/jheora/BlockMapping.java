@@ -36,11 +36,11 @@ public final class BlockMapping {
             {3, 2, 0, 1}
     };
 
-    public final int quadMapToIndex1(int sb, int mb, int b) {
+    public int quadMapToIndex1(int sb, int mb, int b) {
         return blockMap[sb][mbOrderMap[mb]][blockOrderMap1[mb][b]];
     }
 
-    public final int quadMapToMBTopLeft(int sb, int mb) {
+    public int quadMapToMBTopLeft(int sb, int mb) {
         return blockMap[sb][mbOrderMap[mb]][0];
     }
 

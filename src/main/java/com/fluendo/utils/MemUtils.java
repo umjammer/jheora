@@ -22,7 +22,7 @@ public class MemUtils {
 
     private static final char[] bytes = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f'};
 
-    public static final int cmp(byte[] mem1, byte[] mem2, int len) {
+    public static int cmp(byte[] mem1, byte[] mem2, int len) {
         for (int i = 0; i < len; i++) {
             if (mem1[i] != mem2[i]) {
                 if (mem1[i] < mem2[i])
@@ -34,7 +34,7 @@ public class MemUtils {
         return 0;
     }
 
-    public static final void set(byte[] mem, int offset, int val, int len) {
+    public static void set(byte[] mem, int offset, int val, int len) {
         len += offset;
 
         for (int i = offset; i < len; i++) {
@@ -42,7 +42,7 @@ public class MemUtils {
         }
     }
 
-    public static final void set(short[] mem, int offset, int val, int len) {
+    public static void set(short[] mem, int offset, int val, int len) {
         len += offset;
 
         for (int i = offset; i < len; i++) {
@@ -50,15 +50,15 @@ public class MemUtils {
         }
     }
 
-    public static final void set(int[] mem, int offset, int val, int len) {
+    public static void set(int[] mem, int offset, int val, int len) {
         len += offset;
 
         for (int i = offset; i < len; i++) {
-            mem[i] = (int) val;
+            mem[i] = val;
         }
     }
 
-    public static final void set(Object[] mem, int offset, Object val, int len) {
+    public static void set(Object[] mem, int offset, Object val, int len) {
         len += offset;
 
         for (int i = offset; i < len; i++) {
@@ -67,7 +67,7 @@ public class MemUtils {
     }
 
     /* check if a given arr starts with the given pattern */
-    public static final boolean startsWith(byte[] arr, int offset, int len, byte[] pattern) {
+    public static boolean startsWith(byte[] arr, int offset, int len, byte[] pattern) {
         int length = pattern.length;
         int i;
 
@@ -81,15 +81,15 @@ public class MemUtils {
         return i == length;
     }
 
-    public static final void dump(byte[] mem, int start, int len) {
+    public static void dump(byte[] mem, int start, int len) {
         int i, j;
-        StringBuffer string = new StringBuffer(50);
-        StringBuffer chars = new StringBuffer(18);
+        StringBuilder string = new StringBuilder(50);
+        StringBuilder chars = new StringBuilder(18);
         String vis = new String(mem, start, len);
 
         i = j = 0;
         while (i < len) {
-            int b = ((int) mem[i + start]);
+            int b = mem[i + start];
             if (b < 0) b += 256;
 
             if (b > 0x20 && b < 0x7f)
@@ -105,7 +105,7 @@ public class MemUtils {
             i++;
 
             if (j == 16 || i == len) {
-                System.out.println("" + (i - j) + "  " + string.toString() + chars.toString());
+                System.out.println((i - j) + "  " + string + chars);
 
                 string.setLength(0);
                 chars.setLength(0);

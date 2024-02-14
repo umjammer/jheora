@@ -43,24 +43,24 @@ public class DCTDecode {
      */
     private static final short[][] pc = {
             {0, 0, 0, 0, 0, 0},
-            {1, 0, 0, 0, 0, 0},      /* PL */
-            {1, 0, 0, 0, 0, 0},      /* PUL */
-            {1, 0, 0, 0, 0, 0},      /* PUL|PL */
-            {1, 0, 0, 0, 0, 0},      /* PU */
-            {1, 1, 0, 0, 1, 1},      /* PU|PL */
-            {0, 1, 0, 0, 0, 0},      /* PU|PUL */
-            {29, -26, 29, 0, 5, 31}, /* PU|PUL|PL */
-            {1, 0, 0, 0, 0, 0},      /* PUR */
-            {75, 53, 0, 0, 7, 127},  /* PUR|PL */
-            {1, 1, 0, 0, 1, 1},      /* PUR|PUL */
-            {75, 0, 53, 0, 7, 127},  /* PUR|PUL|PL */
-            {1, 0, 0, 0, 0, 0},      /* PUR|PU */
-            {75, 0, 53, 0, 7, 127},  /* PUR|PU|PL */
-            {3, 10, 3, 0, 4, 15},    /* PUR|PU|PUL */
-            {29, -26, 29, 0, 5, 31}  /* PUR|PU|PUL|PL */
+            {1, 0, 0, 0, 0, 0},      // PL
+            {1, 0, 0, 0, 0, 0},      // PUL
+            {1, 0, 0, 0, 0, 0},      // PUL|PL
+            {1, 0, 0, 0, 0, 0},      // PU
+            {1, 1, 0, 0, 1, 1},      // PU|PL
+            {0, 1, 0, 0, 0, 0},      // PU|PUL
+            {29, -26, 29, 0, 5, 31}, // PU|PUL|PL
+            {1, 0, 0, 0, 0, 0},      // PUR
+            {75, 53, 0, 0, 7, 127},  // PUR|PL
+            {1, 1, 0, 0, 1, 1},      // PUR|PUL
+            {75, 0, 53, 0, 7, 127},  // PUR|PUL|PL
+            {1, 0, 0, 0, 0, 0},      // PUR|PU
+            {75, 0, 53, 0, 7, 127},  // PUR|PU|PL
+            {3, 10, 3, 0, 4, 15},    // PUR|PU|PUL
+            {29, -26, 29, 0, 5, 31}  // PUR|PU|PUL|PL
     };
 
-    /* boundary case bit masks. */
+    // boundary case bit masks.
     private static final int[] bc_mask = {
             // normal case no boundary condition
             PUR | PU | PUL | PL,
@@ -81,21 +81,23 @@ public class DCTDecode {
     };
 
     private static final short[] Mode2Frame = {
-            1,  /* CODE_INTER_NO_MV     0 => Encoded diff from same MB last frame  */
-            0,  /* CODE_INTRA           1 => DCT Encoded Block */
-            1,  /* CODE_INTER_PLUS_MV   2 => Encoded diff from included MV MB last frame */
-            1,  /* CODE_INTER_LAST_MV   3 => Encoded diff from MRU MV MB last frame */
-            1,  /* CODE_INTER_PRIOR_MV  4 => Encoded diff from included 4 separate MV blocks */
-            2,  /* CODE_USING_GOLDEN    5 => Encoded diff from same MB golden frame */
-            2,  /* CODE_GOLDEN_MV       6 => Encoded diff from included MV MB golden frame */
-            1   /* CODE_INTER_FOUR_MV   7 => Encoded diff from included 4 separate MV blocks */
+            1,  // CODE_INTER_NO_MV     0 => Encoded diff from same MB last frame 
+            0,  // CODE_INTRA           1 => DCT Encoded Block
+            1,  // CODE_INTER_PLUS_MV   2 => Encoded diff from included MV MB last frame
+            1,  // CODE_INTER_LAST_MV   3 => Encoded diff from MRU MV MB last frame
+            1,  // CODE_INTER_PRIOR_MV  4 => Encoded diff from included 4 separate MV blocks
+            2,  // CODE_USING_GOLDEN    5 => Encoded diff from same MB golden frame
+            2,  // CODE_GOLDEN_MV       6 => Encoded diff from included MV MB golden frame
+            1   // CODE_INTER_FOUR_MV   7 => Encoded diff from included 4 separate MV blocks
     };
 
     private short[] ReconDataBuffer = new short[64];
-    /* value left value up-left, value up, value up-right, missing
-        values skipped. */
+    /**
+     * value left value up-left, value up, value up-right, missing
+     * values skipped.
+     */
     private int[] v = new int[4];
-    /* fragment number left, up-left, up, up-right */
+    // fragment number left, up-left, up, up-right
     private int[] fn = new int[4];
     private short[] Last = new short[3];
     private iDCT idct = new iDCT();
@@ -105,8 +107,8 @@ public class DCTDecode {
         int ReconPixelIndex;
         short[] dequant_coeffs;
 
-        /* Select the appropriate inverse Q matrix and line stride */
-        if (FragmentNumber < (int) pbi.YPlaneFragments) {
+        // Select the appropriate inverse Q matrix and line stride
+        if (FragmentNumber < pbi.YPlaneFragments) {
             ReconPixelsPerLine = pbi.YStride;
             dequant_coeffs = pbi.dequant_Y_coeffs;
         } else {
@@ -114,10 +116,10 @@ public class DCTDecode {
             dequant_coeffs = pbi.dequant_UV_coeffs;
         }
 
-        /* Set up pointer into the quantisation buffer. */
+        // Set up pointer into the quantisation buffer.
         short[] quantized_list = pbi.QFragData[FragmentNumber];
 
-        /* Invert quantisation and DCT to get pixel data. */
+        // Invert quantisation and DCT to get pixel data.
         switch (pbi.FragCoefEOB[FragmentNumber]) {
         case 0:
         case 1:
@@ -137,51 +139,45 @@ public class DCTDecode {
         default:
             idct.IDctSlow(quantized_list, dequant_coeffs, ReconDataBuffer);
         }
-    /*
-    for (int i=0; i<64; i++) {
-      System.out.print(ReconDataBuffer[i]+" ");
-    }
-    System.out.println();
-    */
 
-        /* Convert fragment number to a pixel offset in a reconstruction buffer. */
+//        for (int i = 0; i < 64; i++) {
+//            System.out.print(ReconDataBuffer[i] + " ");
+//        }
+//        System.out.println();
+
+        // Convert fragment number to a pixel offset in a reconstruction buffer.
         ReconPixelIndex = pbi.recon_pixel_index_table[FragmentNumber];
 
-        /* Get the pixel index for the first pixel in the fragment. */
+        // Get the pixel index for the first pixel in the fragment.
         Recon.ReconIntra(pbi.ThisFrameRecon, ReconPixelIndex, ReconDataBuffer, ReconPixelsPerLine);
     }
 
     private void ExpandBlock(Playback pbi, int FragmentNumber) {
-        short[] LastFrameRecPtr;   /* Pointer into previous frame
-                                       reconstruction. */
-        int ReconPixelsPerLine; /* Pixels per line */
-        int ReconPixelIndex;    /* Offset for block into a
-                                        reconstruction buffer */
-        int ReconPtr2Offset;    /* Offset for second
-                                        reconstruction in half pixel
-                                        MC */
-        int MVOffset;           /* Baseline motion vector offset */
-        int MvShift;          /* Shift to correct to 1/2 or 1/4 pixel */
-        int MvModMask;          /* Mask to determine whether 1/2
-                                        pixel is used */
+        short[] LastFrameRecPtr; // Pointer into previous frame reconstruction.
+        int ReconPixelsPerLine; // Pixels per line
+        int ReconPixelIndex; // Offset for block into a reconstruction buffer
+        int ReconPtr2Offset; // Offset for second reconstruction in half pixel MC
+        int MVOffset; // Baseline motion vector offset
+        int MvShift;  // Shift to correct to 1/2 or 1/4 pixel
+        int MvModMask; // Mask to determine whether 1/2 pixel is used
         short[] dequant_coeffs;
         CodingMode codingMode;
 
-        /* Get coding mode for this block */
+        // Get coding mode for this block
         if (pbi.getFrameType() == Constants.BASE_FRAME) {
             codingMode = CodingMode.CODE_INTRA;
         } else {
-            /* Get Motion vector and mode for this block. */
+            // Get Motion vector and mode for this block.
             codingMode = pbi.FragCodingMethod[FragmentNumber];
         }
 
-        /* Select the appropriate inverse Q matrix and line stride */
-        if (FragmentNumber < (int) pbi.YPlaneFragments) {
+        // Select the appropriate inverse Q matrix and line stride
+        if (FragmentNumber < pbi.YPlaneFragments) {
             ReconPixelsPerLine = pbi.YStride;
             MvShift = 1;
             MvModMask = 0x00000001;
 
-            /* Select appropriate dequantiser matrix. */
+            // Select appropriate dequantiser matrix.
             if (codingMode == CodingMode.CODE_INTRA)
                 dequant_coeffs = pbi.dequant_Y_coeffs;
             else
@@ -191,17 +187,17 @@ public class DCTDecode {
             MvShift = 2;
             MvModMask = 0x00000003;
 
-            /* Select appropriate dequantiser matrix. */
+            // Select appropriate dequantiser matrix.
             if (codingMode == CodingMode.CODE_INTRA)
                 dequant_coeffs = pbi.dequant_UV_coeffs;
             else
                 dequant_coeffs = pbi.dequant_Inter_coeffs;
         }
 
-        /* Set up pointer into the quantisation buffer. */
+        // Set up pointer into the quantisation buffer.
         short[] quantized_list = pbi.QFragData[FragmentNumber];
 
-        /* Invert quantisation and DCT to get pixel data. */
+        // Invert quantisation and DCT to get pixel data.
         switch (pbi.FragCoefEOB[FragmentNumber]) {
         case 0:
         case 1:
@@ -221,36 +217,34 @@ public class DCTDecode {
         default:
             idct.IDctSlow(quantized_list, dequant_coeffs, ReconDataBuffer);
         }
-    /*
-    for (int i=0; i<64; i++) {
-      System.out.print(ReconDataBuffer[i]+" ");
-    }
-    System.out.println();
-    */
 
+//        for (int i = 0; i < 64; i++) {
+//            System.out.print(ReconDataBuffer[i] + " ");
+//        }
+//        System.out.println();
 
-        /* Convert fragment number to a pixel offset in a reconstruction buffer. */
+        // Convert fragment number to a pixel offset in a reconstruction buffer.
         ReconPixelIndex = pbi.recon_pixel_index_table[FragmentNumber];
 
-        /* Action depends on decode mode. */
+        // Action depends on decode mode.
         if (codingMode == CodingMode.CODE_INTER_NO_MV) {
-            /* Inter with no motion vector */
-      /* Reconstruct the pixel data using the last frame reconstruction
-         and change data when the motion vector is (0,0), the recon is
-         based on the lastframe without loop filtering---- for testing */
+            // Inter with no motion vector
+            // Reconstruct the pixel data using the last frame reconstruction
+            // and change data when the motion vector is (0,0), the recon is
+            // based on the lastframe without loop filtering---- for testing */
             Recon.ReconInter(pbi.ThisFrameRecon, ReconPixelIndex,
                     pbi.LastFrameRecon, ReconPixelIndex,
                     ReconDataBuffer, ReconPixelsPerLine);
 
         } else if (ModeUsesMC[codingMode.getValue()] != 0) {
-            /* The mode uses a motion vector. */
-            /* Get vector from list */
+            // The mode uses a motion vector.
+            // Get vector from list
             int dir;
       
-      /* Work out the base motion vector offset and the 1/2 pixel offset
-         if any.  For the U and V planes the MV specifies 1/4 pixel
-         accuracy. This is adjusted to 1/2 pixel as follows ( 0.0,
-         1/4->1/2, 1/2->1/2, 3/4->1/2 ). */
+            // Work out the base motion vector offset and the 1/2 pixel offset
+            // if any.  For the U and V planes the MV specifies 1/4 pixel
+            // accuracy. This is adjusted to 1/2 pixel as follows ( 0.0,
+            // 1/4->1/2, 1/2->1/2, 3/4->1/2 ).
             ReconPtr2Offset = 0;
             MVOffset = 0;
 
@@ -278,46 +272,44 @@ public class DCTDecode {
 
             int LastFrameRecOffset = ReconPixelIndex + MVOffset;
 
-            /* Set up the first of the two reconstruction buffer pointers. */
+            // Set up the first of the two reconstruction buffer pointers.
             if (codingMode == CodingMode.CODE_GOLDEN_MV) {
                 LastFrameRecPtr = pbi.GoldenFrame;
             } else {
                 LastFrameRecPtr = pbi.LastFrameRecon;
             }
 
-      /*
-      System.out.println(pbi.FragMVect[FragmentNumber].x+" "+
-                         pbi.FragMVect[FragmentNumber].y+" "+
-			 ReconPixelIndex+" "+LastFrameRecOffset+ " "+
-			 ReconPtr2Offset);
-			 */
+//            System.out.println(pbi.FragMVect[FragmentNumber].x + " " +
+//                    pbi.FragMVect[FragmentNumber].y + " " +
+//                    ReconPixelIndex + " " + LastFrameRecOffset + " " +
+//                    ReconPtr2Offset);
 
-            /* Select the appropriate reconstruction function */
+            // Select the appropriate reconstruction function
             if (ReconPtr2Offset == 0) {
-        /* Reconstruct the pixel dats from the reference frame and change data
-           (no half pixel in this case as the two references were the same. */
+                // Reconstruct the pixel dats from the reference frame and change data
+                // (no half pixel in this case as the two references were the same.
                 Recon.ReconInter(pbi.ThisFrameRecon, ReconPixelIndex,
                         LastFrameRecPtr, LastFrameRecOffset,
                         ReconDataBuffer, ReconPixelsPerLine);
             } else {
-                /* Fractional pixel reconstruction. */
-        /* Note that we only use two pixels per reconstruction even for
-           the diagonal. */
+                // Fractional pixel reconstruction.
+                // Note that we only use two pixels per reconstruction even for
+                // the diagonal.
                 Recon.ReconInterHalfPixel2(pbi.ThisFrameRecon, ReconPixelIndex,
                         LastFrameRecPtr, LastFrameRecOffset,
                         LastFrameRecPtr, LastFrameRecOffset + ReconPtr2Offset,
                         ReconDataBuffer, ReconPixelsPerLine);
             }
         } else if (codingMode == CodingMode.CODE_USING_GOLDEN) {
-            /* Golden frame with motion vector */
-      /* Reconstruct the pixel data using the golden frame
-         reconstruction and change data */
+            // Golden frame with motion vector
+            // Reconstruct the pixel data using the golden frame
+            // reconstruction and change data
             Recon.ReconInter(pbi.ThisFrameRecon, ReconPixelIndex,
                     pbi.GoldenFrame, ReconPixelIndex,
                     ReconDataBuffer, ReconPixelsPerLine);
         } else {
-            /* Simple Intra coding */
-            /* Get the pixel index for the first pixel in the fragment. */
+            // Simple Intra coding
+            // Get the pixel index for the first pixel in the fragment.
             Recon.ReconIntra(pbi.ThisFrameRecon, ReconPixelIndex,
                     ReconDataBuffer, ReconPixelsPerLine);
         }
@@ -344,27 +336,25 @@ public class DCTDecode {
         short[] DestPtr2;
         int DestOff2;
 
-        /* Work out various plane specific values */
+        // Work out various plane specific values
         if (PlaneFragOffset == 0) {
-            /* Y Plane */
-            BlockVStep = (pbi.YStride *
-                    (Constants.VFRAGPIXELS - 1));
+            // Y Plane
+            BlockVStep = (pbi.YStride * (Constants.VFRAGPIXELS - 1));
             PlaneStride = pbi.YStride;
             PlaneBorderWidth = Constants.UMV_BORDER;
             PlaneFragments = pbi.YPlaneFragments;
             LineFragments = pbi.HFragments;
         } else {
-            /* U or V plane. */
-            BlockVStep = (pbi.UVStride *
-                    (Constants.VFRAGPIXELS - 1));
+            // U or V plane.
+            BlockVStep = (pbi.UVStride * (Constants.VFRAGPIXELS - 1));
             PlaneStride = pbi.UVStride;
             PlaneBorderWidth = Constants.UMV_BORDER / 2;
             PlaneFragments = pbi.UVPlaneFragments;
             LineFragments = pbi.HFragments / 2;
         }
 
-    /* Setup the source and destination pointers for the top and bottom
-       borders */
+        // Setup the source and destination pointers for the top and bottom
+        // borders
         PixelIndex = pbi.recon_pixel_index_table[PlaneFragOffset];
         SrcPtr1 = DestReconPtr;
         SrcOff1 = PixelIndex - PlaneBorderWidth;
@@ -379,8 +369,8 @@ public class DCTDecode {
         DestPtr2 = SrcPtr2;
         DestOff2 = SrcOff2 + PlaneStride;
 
-    /* Now copy the top and bottom source lines into each line of the
-       respective borders */
+        // Now copy the top and bottom source lines into each line of the
+        // respective borders
         for (i = 0; i < PlaneBorderWidth; i++) {
             System.arraycopy(SrcPtr1, SrcOff1, DestPtr1, DestOff1, PlaneStride);
             System.arraycopy(SrcPtr2, SrcOff2, DestPtr2, DestOff2, PlaneStride);
@@ -409,23 +399,23 @@ public class DCTDecode {
         short[] DestPtr2;
         int DestOff2;
 
-        /* Work out various plane specific values */
+        // Work out various plane specific values
         if (PlaneFragOffset == 0) {
-            /* Y Plane */
+            // Y Plane
             PlaneStride = pbi.YStride;
             PlaneBorderWidth = Constants.UMV_BORDER;
             LineFragments = pbi.HFragments;
             PlaneHeight = pbi.info.height;
         } else {
-            /* U or V plane. */
+            // U or V plane.
             PlaneStride = pbi.UVStride;
             PlaneBorderWidth = Constants.UMV_BORDER / 2;
             LineFragments = pbi.HFragments / 2;
             PlaneHeight = pbi.info.height / 2;
         }
 
-    /* Setup the source data values and destination pointers for the
-       left and right edge borders */
+        // Setup the source data values and destination pointers for the
+        // left and right edge borders
         PixelIndex = pbi.recon_pixel_index_table[PlaneFragOffset];
         SrcPtr1 = DestReconPtr;
         SrcOff1 = PixelIndex;
@@ -440,8 +430,8 @@ public class DCTDecode {
         DestPtr2 = DestReconPtr;
         DestOff2 = PixelIndex + 1;
 
-    /* Now copy the top and bottom source lines into each line of the
-       respective borders */
+        // Now copy the top and bottom source lines into each line of the
+        // respective borders
         for (i = 0; i < PlaneHeight; i++) {
             MemUtils.set(DestPtr1, DestOff1, SrcPtr1[SrcOff1], PlaneBorderWidth);
             MemUtils.set(DestPtr2, DestOff2, SrcPtr2[SrcOff2], PlaneBorderWidth);
@@ -456,12 +446,12 @@ public class DCTDecode {
                                  short[] DestReconPtr) {
         int PlaneFragOffset;
 
-        /* Y plane */
+        // Y plane
         PlaneFragOffset = 0;
         UpdateUMV_VBorders(pbi, DestReconPtr, PlaneFragOffset);
         UpdateUMV_HBorders(pbi, DestReconPtr, PlaneFragOffset);
 
-        /* Then the U and V Planes */
+        // Then the U and V Planes
         PlaneFragOffset = pbi.YPlaneFragments;
         UpdateUMV_VBorders(pbi, DestReconPtr, PlaneFragOffset);
         UpdateUMV_HBorders(pbi, DestReconPtr, PlaneFragOffset);
@@ -474,12 +464,12 @@ public class DCTDecode {
     private void CopyRecon(Playback pbi, short[] DestReconPtr,
                            short[] SrcReconPtr) {
         int i;
-        int PlaneLineStep; /* Pixels per line */
+        int PlaneLineStep; // Pixels per line
         int PixelIndex;
 
-        /* Copy over only updated blocks.*/
+        // Copy over only updated blocks.
 
-        /* First Y plane */
+        // First Y plane
         PlaneLineStep = pbi.YStride;
         for (i = 0; i < pbi.YPlaneFragments; i++) {
             if (pbi.display_fragments[i] != 0) {
@@ -488,7 +478,7 @@ public class DCTDecode {
             }
         }
 
-        /* Then U and V */
+        // Then U and V
         PlaneLineStep = pbi.UVStride;
         for (i = pbi.YPlaneFragments; i < pbi.UnitFragments; i++) {
             if (pbi.display_fragments[i] != 0) {
@@ -501,12 +491,12 @@ public class DCTDecode {
     private void CopyNotRecon(Playback pbi, short[] DestReconPtr,
                               short[] SrcReconPtr) {
         int i;
-        int PlaneLineStep; /* Pixels per line */
+        int PlaneLineStep; // Pixels per line
         int PixelIndex;
 
-        /* Copy over only updated blocks. */
+        // Copy over only updated blocks.
 
-        /* First Y plane */
+        // First Y plane
         PlaneLineStep = pbi.YStride;
         for (i = 0; i < pbi.YPlaneFragments; i++) {
             if (pbi.display_fragments[i] == 0) {
@@ -515,7 +505,7 @@ public class DCTDecode {
             }
         }
 
-        /* Then U and V */
+        // Then U and V
         PlaneLineStep = pbi.UVStride;
         for (i = pbi.YPlaneFragments; i < pbi.UnitFragments; i++) {
             if (pbi.display_fragments[i] == 0) {
@@ -528,56 +518,56 @@ public class DCTDecode {
     public void ExpandToken(short[] ExpandedBlock,
                             byte[] CoeffIndex, int FragIndex, int Token,
                             int ExtraBits) {
-        /* Is the token is a combination run and value token. */
+        // Is the token is a combination run and value token.
         if (Token >= Huffman.DCT_RUN_CATEGORY1) {
-      /* Expand the token and additional bits to a zero run length and
-         data value.  */
+            // Expand the token and additional bits to a zero run length and
+            // data value.
             if (Token < Huffman.DCT_RUN_CATEGORY2) {
-                /* Decoding method depends on token */
+                // Decoding method depends on token
                 if (Token < Huffman.DCT_RUN_CATEGORY1B) {
-                    /* Step on by the zero run length */
+                    // Step on by the zero run length
                     CoeffIndex[FragIndex] += (byte) ((Token - Huffman.DCT_RUN_CATEGORY1) + 1);
-                    /* The extra bit determines the sign. */
+                    // The extra bit determines the sign.
                     ExpandedBlock[CoeffIndex[FragIndex]] = (short) -(((ExtraBits & 0x01) << 1) - 1);
                 } else if (Token == Huffman.DCT_RUN_CATEGORY1B) {
-                    /* Bits 0-1 determines the zero run length */
-                    CoeffIndex[FragIndex] += (6 + (ExtraBits & 0x03));
-                    /* Bit 2 determines the sign */
+                    // Bits 0-1 determines the zero run length
+                    CoeffIndex[FragIndex] += (byte) (6 + (ExtraBits & 0x03));
+                    // Bit 2 determines the sign
                     ExpandedBlock[CoeffIndex[FragIndex]] = (short) -(((ExtraBits & 0x04) >> 1) - 1);
                 } else {
-                    /* Bits 0-2 determines the zero run length */
-                    CoeffIndex[FragIndex] += (10 + (ExtraBits & 0x07));
-                    /* Bit 3 determines the sign */
+                    // Bits 0-2 determines the zero run length
+                    CoeffIndex[FragIndex] += (byte) (10 + (ExtraBits & 0x07));
+                    // Bit 3 determines the sign
                     ExpandedBlock[CoeffIndex[FragIndex]] = (short) -(((ExtraBits & 0x08) >> 2) - 1);
                 }
             } else {
-        /* If token == Huffman.DCT_RUN_CATEGORY2 we have a single 0 followed by
-           a value */
+                // If token == Huffman.DCT_RUN_CATEGORY2 we have a single 0 followed by
+                // a value
                 if (Token == Huffman.DCT_RUN_CATEGORY2) {
-                    /* Step on by the zero run length */
+                    // Step on by the zero run length
                     CoeffIndex[FragIndex] += 1;
-                    /* Bit 1 determines sign, bit 0 the value */
+                    // Bit 1 determines sign, bit 0 the value
                     ExpandedBlock[CoeffIndex[FragIndex]] = (short) ((2 + (ExtraBits & 0x01)) * -((ExtraBits & 0x02) - 1));
                 } else {
-                    /* else we have 2->3 zeros followed by a value */
-                    /* Bit 0 determines the zero run length */
-                    CoeffIndex[FragIndex] += 2 + (ExtraBits & 0x01);
-                    /* Bit 2 determines the sign, bit 1 the value */
+                    // else we have 2->3 zeros followed by a value
+                    // Bit 0 determines the zero run length
+                    CoeffIndex[FragIndex] += (byte) (2 + (ExtraBits & 0x01));
+                    // Bit 2 determines the sign, bit 1 the value
                     ExpandedBlock[CoeffIndex[FragIndex]] = (short) ((2 + ((ExtraBits & 0x02) >> 1)) * -(((ExtraBits & 0x04) >> 1) - 1));
                 }
             }
 
-            /* Step on over value */
+            // Step on over value
             CoeffIndex[FragIndex] += 1;
 
         } else if (Token == Huffman.DCT_SHORT_ZRL_TOKEN) {
-            /* Token is a ZRL token so step on by the appropriate number of zeros */
-            CoeffIndex[FragIndex] += ExtraBits + 1;
+            // Token is a ZRL token so step on by the appropriate number of zeros
+            CoeffIndex[FragIndex] += (byte) (ExtraBits + 1);
         } else if (Token == Huffman.DCT_ZRL_TOKEN) {
-            /* Token is a ZRL token so step on by the appropriate number of zeros */
-            CoeffIndex[FragIndex] += ExtraBits + 1;
+            // Token is a ZRL token so step on by the appropriate number of zeros
+            CoeffIndex[FragIndex] += (byte) (ExtraBits + 1);
         } else if (Token < Huffman.LOW_VAL_TOKENS) {
-            /* Token is a small single value token. */
+            // Token is a small single value token.
             switch (Token) {
             case Huffman.ONE_TOKEN:
                 ExpandedBlock[CoeffIndex[FragIndex]] = 1;
@@ -593,45 +583,45 @@ public class DCTDecode {
                 break;
             }
 
-            /* Step on the coefficient index. */
+            // Step on the coefficient index.
             CoeffIndex[FragIndex] += 1;
         } else {
-            /* Token is a larger single value token */
-            /* Expand the token and additional bits to a data value. */
+            // Token is a larger single value token
+            // Expand the token and additional bits to a data value.
             if (Token < Huffman.DCT_VAL_CATEGORY3) {
-                /* Offset from LOW_VAL_TOKENS determines value */
+                // Offset from LOW_VAL_TOKENS determines value
                 Token = Token - Huffman.LOW_VAL_TOKENS;
 
-                /* Extra bit determines sign */
+                // Extra bit determines sign
                 ExpandedBlock[CoeffIndex[FragIndex]] = (short) ((Token + Huffman.DCT_VAL_CAT2_MIN) *
                         -(((ExtraBits) << 1) - 1));
             } else if (Token == Huffman.DCT_VAL_CATEGORY3) {
-                /* Bit 1 determines sign, Bit 0 the value */
+                // Bit 1 determines sign, Bit 0 the value
                 ExpandedBlock[CoeffIndex[FragIndex]] = (short) ((Huffman.DCT_VAL_CAT3_MIN + (ExtraBits & 0x01)) *
                         -(((ExtraBits & 0x02)) - 1));
             } else if (Token == Huffman.DCT_VAL_CATEGORY4) {
-                /* Bit 2 determines sign, Bit 0-1 the value */
+                // Bit 2 determines sign, Bit 0-1 the value
                 ExpandedBlock[CoeffIndex[FragIndex]] = (short) ((Huffman.DCT_VAL_CAT4_MIN + (ExtraBits & 0x03)) *
                         -(((ExtraBits & 0x04) >> 1) - 1));
             } else if (Token == Huffman.DCT_VAL_CATEGORY5) {
-                /* Bit 3 determines sign, Bit 0-2 the value */
+                // Bit 3 determines sign, Bit 0-2 the value
                 ExpandedBlock[CoeffIndex[FragIndex]] = (short) ((Huffman.DCT_VAL_CAT5_MIN + (ExtraBits & 0x07)) *
                         -(((ExtraBits & 0x08) >> 2) - 1));
             } else if (Token == Huffman.DCT_VAL_CATEGORY6) {
-                /* Bit 4 determines sign, Bit 0-3 the value */
+                // Bit 4 determines sign, Bit 0-3 the value
                 ExpandedBlock[CoeffIndex[FragIndex]] = (short) ((Huffman.DCT_VAL_CAT6_MIN + (ExtraBits & 0x0F)) *
                         -(((ExtraBits & 0x10) >> 3) - 1));
             } else if (Token == Huffman.DCT_VAL_CATEGORY7) {
-                /* Bit 5 determines sign, Bit 0-4 the value */
+                // Bit 5 determines sign, Bit 0-4 the value
                 ExpandedBlock[CoeffIndex[FragIndex]] = (short) ((Huffman.DCT_VAL_CAT7_MIN + (ExtraBits & 0x1F)) *
                         -(((ExtraBits & 0x20) >> 4) - 1));
             } else if (Token == Huffman.DCT_VAL_CATEGORY8) {
-                /* Bit 9 determines sign, Bit 0-8 the value */
+                // Bit 9 determines sign, Bit 0-8 the value
                 ExpandedBlock[CoeffIndex[FragIndex]] = (short) ((Huffman.DCT_VAL_CAT8_MIN + (ExtraBits & 0x1FF)) *
                         -(((ExtraBits & 0x200) >> 8) - 1));
             }
 
-            /* Step on the coefficient index. */
+            // Step on the coefficient index.
             CoeffIndex[FragIndex] += 1;
         }
     }
@@ -641,7 +631,7 @@ public class DCTDecode {
         short[] QFragPtr;
 
         for (i = 0; i < pbi.CodedBlockIndex; i++) {
-            /* Get the linear index for the current fragment. */
+            // Get the linear index for the current fragment.
             QFragPtr = pbi.QFragData[pbi.CodedBlockList[i]];
             for (j = 0; j < 64; j++) QFragPtr[j] = 0;
         }
@@ -651,7 +641,7 @@ public class DCTDecode {
         int i;
         int j, k, m, n;
 
-        /* predictor count. */
+        // predictor count.
         int pcount;
 
         short wpc;
@@ -668,21 +658,21 @@ public class DCTDecode {
 
         pbi.filter.SetupLoopFilter(pbi.FrameQIndex);
 
-        /* for y,u,v */
+        // for y,u,v
         for (j = 0; j < 3; j++) {
-            /* pick which fragments based on Y, U, V */
+            // pick which fragments based on Y, U, V
             switch (j) {
-            case 0: /* y */
+            case 0: // y
                 FromFragment = 0;
                 FragsAcross = pbi.HFragments;
                 FragsDown = pbi.VFragments;
                 break;
-            case 1: /* u */
+            case 1: // u
                 FromFragment = pbi.YPlaneFragments;
                 FragsAcross = pbi.HFragments >> 1;
                 FragsDown = pbi.VFragments >> 1;
                 break;
-            /*case 2:  v */
+//            case 2: // v
             default:
                 FromFragment = pbi.YPlaneFragments + pbi.UVPlaneFragments;
                 FragsAcross = pbi.HFragments >> 1;
@@ -690,23 +680,23 @@ public class DCTDecode {
                 break;
             }
 
-            /* initialize our array of last used DC Components */
+            // initialize our array of last used DC Components
             for (k = 0; k < 3; k++)
                 Last[k] = 0;
 
             i = FromFragment;
 
-            /* do prediction on all of Y, U or V */
+            // do prediction on all of Y, U or V
             for (m = 0; m < FragsDown; m++) {
                 for (n = 0; n < FragsAcross; n++, i++) {
   
-          /* only do 2 prediction if fragment coded and on non intra or
-             if all fragments are intra */
+                    // only do 2 prediction if fragment coded and on non intra or
+                    // if all fragments are intra
                     if ((pbi.display_fragments[i] != 0) || (pbi.getFrameType() == Constants.BASE_FRAME)) {
-                        /* Type of Fragment */
+                        // Type of Fragment
                         WhichFrame = Mode2Frame[pbi.FragCodingMethod[i].getValue()];
 
-                        /* Check Borderline Cases */
+                        // Check Borderline Cases
                         WhichCase = (n == 0 ? 1 : 0) + ((m == 0 ? 1 : 0) << 1) + ((n + 1 == FragsAcross ? 1 : 0) << 2);
 
                         fn[0] = i - 1;
@@ -714,8 +704,8 @@ public class DCTDecode {
                         fn[2] = i - FragsAcross;
                         fn[3] = i - FragsAcross + 1;
   
-            /* fragment valid for prediction use if coded and it comes
-               from same frame as the one we are predicting */
+                        // fragment valid for prediction use if coded and it comes
+                        // from same frame as the one we are predicting
                         for (k = pcount = wpc = 0; k < 4; k++) {
                             int pflag;
                             pflag = 1 << k;
@@ -723,35 +713,35 @@ public class DCTDecode {
                                     pbi.display_fragments[fn[k]] != 0 &&
                                     (Mode2Frame[pbi.FragCodingMethod[fn[k]].getValue()] == WhichFrame)) {
                                 v[pcount] = pbi.QFragData[fn[k]][0];
-                                wpc |= pflag;
+                                wpc |= (short) pflag;
                                 pcount++;
                             }
                         }
 
                         if (wpc == 0) {
-                            /* fall back to the last coded fragment */
+                            // fall back to the last coded fragment
                             pbi.QFragData[i][0] += Last[WhichFrame];
 
                         } else {
 
-                            /* don't do divide if divisor is 1 or 0 */
+                            // don't do divide if divisor is 1 or 0
                             PredictedDC = (short) (pc[wpc][0] * v[0]);
                             for (k = 1; k < pcount; k++) {
-                                PredictedDC += pc[wpc][k] * v[k];
+                                PredictedDC += (short) (pc[wpc][k] * v[k]);
                             }
 
-                            /* if we need to do a shift */
+                            // if we need to do a shift
                             if (pc[wpc][4] != 0) {
 
-                                /* If negative add in the negative correction factor */
+                                // If negative add in the negative correction factor
                                 if (PredictedDC < 0)
                                     PredictedDC += pc[wpc][5];
 
-                                /* Shift in lieu of a divide */
+                                // Shift in lieu of a divide
                                 PredictedDC >>= pc[wpc][4];
                             }
 
-                            /* check for outranging on the two predictors that can outrange */
+                            // check for outranging on the two predictors that can outrange
                             if ((wpc & (PU | PUL | PL)) == (PU | PUL | PL)) {
                                 if (Math.abs(PredictedDC - v[2]) > 128) {
                                     PredictedDC = (short) v[2];
@@ -765,11 +755,11 @@ public class DCTDecode {
                             pbi.QFragData[i][0] += PredictedDC;
                         }
 
-            /* Save the last fragment coded for whatever frame we are
-               predicting from */
+                        // Save the last fragment coded for whatever frame we are
+                        // predicting from
                         Last[WhichFrame] = pbi.QFragData[i][0];
 
-                        /* Inverse DCT and reconstitute buffer in thisframe */
+                        // Inverse DCT and reconstitute buffer in thisframe
                         if (isBaseFrame)
                             ExpandKFBlock(pbi, i);
                         else
@@ -779,8 +769,8 @@ public class DCTDecode {
             }
         }
 
-        /* Copy the current reconstruction back to the last frame recon buffer. */
-        if (pbi.CodedBlockIndex > (int) (pbi.UnitFragments >> 1)) {
+        // Copy the current reconstruction back to the last frame recon buffer.
+        if (pbi.CodedBlockIndex > (pbi.UnitFragments >> 1)) {
             short[] SwapReconBuffersTemp = pbi.ThisFrameRecon;
             pbi.ThisFrameRecon = pbi.LastFrameRecon;
             pbi.LastFrameRecon = SwapReconBuffersTemp;
@@ -789,14 +779,14 @@ public class DCTDecode {
             CopyRecon(pbi, pbi.LastFrameRecon, pbi.ThisFrameRecon);
         }
 
-        /* Apply a loop filter to edge pixels of updated blocks */
+        // Apply a loop filter to edge pixels of updated blocks
         pbi.filter.LoopFilter(pbi);
 
-        /* We may need to update the UMV border */
+        // We may need to update the UMV border
         UpdateUMVBorder(pbi, pbi.LastFrameRecon);
 
-    /* Reconstruct the golden frame if necessary.
-       For VFW codec only on key frames */
+        // Reconstruct the golden frame if necessary.
+        // For VFW codec only on key frames
         if (isBaseFrame) {
             CopyRecon(pbi, pbi.GoldenFrame, pbi.LastFrameRecon);
             UpdateUMVBorder(pbi, pbi.GoldenFrame);

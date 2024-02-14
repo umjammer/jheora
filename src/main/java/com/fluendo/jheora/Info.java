@@ -90,12 +90,12 @@ public class Info {
         if (version_minor > Version.VERSION_MINOR)
             return Result.VERSION;
 
-        width = (int) (opb.readB(16) << 4);
-        height = (int) (opb.readB(16) << 4);
-        frame_width = (int) opb.readB(24);
-        frame_height = (int) opb.readB(24);
-        offset_x = (int) opb.readB(8);
-        offset_y = (int) opb.readB(8);
+        width = opb.readB(16) << 4;
+        height = opb.readB(16) << 4;
+        frame_width = opb.readB(24);
+        frame_height = opb.readB(24);
+        offset_x = opb.readB(8);
+        offset_y = opb.readB(8);
 
         fps_numerator = opb.readB(32);
         fps_denominator = opb.readB(32);
@@ -106,7 +106,7 @@ public class Info {
         target_bitrate = opb.readB(24);
         quality = opb.readB(6);
 
-        keyframe_frequency_force = 1 << opb.readB(5);
+        keyframe_frequency_force = 1L << opb.readB(5);
 
         /* spare configuration bits */
         if (opb.readB(5) == -1)

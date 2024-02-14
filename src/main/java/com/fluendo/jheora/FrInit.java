@@ -95,7 +95,7 @@ public class FrInit {
                             Constants.HFRAGPIXELS) + pbi.YPlaneSize;
         }
 
-        /************************************************************************/
+        // ----
         /* Now calculate the pixel index table for image reconstruction buffers */
         PixelIndexTablePtr = pbi.recon_pixel_index_table;
         for (i = 0; i < pbi.YPlaneFragments; i++) {

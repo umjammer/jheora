@@ -26,15 +26,15 @@ package com.fluendo.jheora;
 
 public final class Recon {
 
-    private static final short clamp255(int val) {
+    private static short clamp255(int val) {
         val -= 255;
         val = -(255 + ((val >> (31)) & val));
         return (short) -((val >> 31) & val);
     }
 
-    public static final void CopyBlock(short[] src,
-                                       short[] dest, int idx,
-                                       int srcstride) {
+    public static void CopyBlock(short[] src,
+                                 short[] dest, int idx,
+                                 int srcstride) {
         int i, off = idx;
 
         for (i = 0; i < 8; i++) {
@@ -50,8 +50,8 @@ public final class Recon {
         }
     }
 
-    public static final void ReconIntra(short[] ReconPtr, int idx,
-                                        short[] ChangePtr, int LineStep) {
+    public static void ReconIntra(short[] ReconPtr, int idx,
+                                  short[] ChangePtr, int LineStep) {
         int i, roff = idx, coff = 0;
 
         for (i = 0; i < 8; i++) {
@@ -69,9 +69,9 @@ public final class Recon {
         }
     }
 
-    public static final void ReconInter(short[] ReconPtr, int idx1,
-                                        short[] RefPtr, int idx2, short[] ChangePtr,
-                                        int LineStep) {
+    public static void ReconInter(short[] ReconPtr, int idx1,
+                                  short[] RefPtr, int idx2, short[] ChangePtr,
+                                  int LineStep) {
         int coff = 0, roff1 = idx1, roff2 = idx2, i;
 
         for (i = 0; i < 8; i++) {
@@ -88,9 +88,9 @@ public final class Recon {
         }
     }
 
-    public static final void ReconInterHalfPixel2(short[] ReconPtr, int idx1,
-                                                  short[] RefPtr1, int idx2, short[] RefPtr2, int idx3,
-                                                  short[] ChangePtr, int LineStep) {
+    public static void ReconInterHalfPixel2(short[] ReconPtr, int idx1,
+                                            short[] RefPtr1, int idx2, short[] RefPtr2, int idx3,
+                                            short[] ChangePtr, int LineStep) {
         int coff = 0, roff1 = idx1, roff2 = idx2, roff3 = idx3, i;
 
         for (i = 0; i < 8; i++) {

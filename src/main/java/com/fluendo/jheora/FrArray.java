@@ -369,44 +369,44 @@ public class FrArray {
         /* Initialise the decoding. */
         bits_so_far = 0;
 
-        bit_pattern = (int) opb.readB(1);
+        bit_pattern = opb.readB(1);
 
         /* Do we have a match */
         if (bit_pattern == 0)
             return CodingMode.MODES[0];
 
         /* Get the next bit */
-        bit_pattern = (bit_pattern << 1) | (int) opb.readB(1);
+        bit_pattern = (bit_pattern << 1) | opb.readB(1);
 
         /* Do we have a match */
         if (bit_pattern == 0x0002)
             return CodingMode.MODES[1];
 
-        bit_pattern = (bit_pattern << 1) | (int) opb.readB(1);
+        bit_pattern = (bit_pattern << 1) | opb.readB(1);
 
         /* Do we have a match  */
         if (bit_pattern == 0x0006)
             return CodingMode.MODES[2];
 
-        bit_pattern = (bit_pattern << 1) | (int) opb.readB(1);
+        bit_pattern = (bit_pattern << 1) | opb.readB(1);
 
         /* Do we have a match */
         if (bit_pattern == 0x000E)
             return CodingMode.MODES[3];
 
-        bit_pattern = (bit_pattern << 1) | (int) opb.readB(1);
+        bit_pattern = (bit_pattern << 1) | opb.readB(1);
 
         /* Do we have a match */
         if (bit_pattern == 0x001E)
             return CodingMode.MODES[4];
 
-        bit_pattern = (bit_pattern << 1) | (int) opb.readB(1);
+        bit_pattern = (bit_pattern << 1) | opb.readB(1);
 
         /* Do we have a match */
         if (bit_pattern == 0x003E)
             return CodingMode.MODES[5];
 
-        bit_pattern = (bit_pattern << 1) | (int) opb.readB(1);
+        bit_pattern = (bit_pattern << 1) | opb.readB(1);
 
         /* Do we have a match */
         if (bit_pattern == 0x007E)

@@ -307,7 +307,7 @@ public class Quant {
 
         /* Set the inter/intra descision control variables. */
         pbi.FrameQIndex = Constants.Q_TABLE_SIZE - 1;
-        while ((int) pbi.FrameQIndex >= 0) {
+        while (pbi.FrameQIndex >= 0) {
             if ((pbi.FrameQIndex == 0) ||
                     (pbi.QThreshTable[pbi.FrameQIndex] >= NewQ))
                 break;

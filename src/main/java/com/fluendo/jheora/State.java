@@ -80,7 +80,7 @@ public class State {
                     granulepos = 0;
                 } else {
                     if (pbi.FrameType == Constants.BASE_FRAME) {
-                        long frames = granulepos & ((1 << pbi.keyframe_granule_shift) - 1);
+                        long frames = granulepos & ((1L << pbi.keyframe_granule_shift) - 1);
                         granulepos >>= pbi.keyframe_granule_shift;
                         granulepos += frames + 1;
                         granulepos <<= pbi.keyframe_granule_shift;

@@ -102,14 +102,14 @@ public class Playback {
     int UVMacroBlocks;  /* Number of Macro-Blocks in U/V component */
     int MacroBlocks;    /* Total number of Macro-Blocks */
 
-    /**********************************************************************/
+    // ----
     /* Frames  */
     short[] ThisFrameRecon;
     short[] GoldenFrame;
     short[] LastFrameRecon;
     short[] PostProcessBuffer;
 
-    /**********************************************************************/
+    // ----
     /* Fragment Information */
     int[] pixel_index_table;        /* start address of first
                                               pixel of fragment in
@@ -133,7 +133,7 @@ public class Playback {
     CodingMode[] FragCodingMethod;          /* coding method for the
                                                fragment */
 
-    /***********************************************************************/
+    // ----
     /* Macro Block and SuperBlock Information */
     BlockMapping BlockMap;          /* super block + sub macro
                                                    block + sub frag ->
@@ -145,7 +145,7 @@ public class Playback {
     byte[] MBCodedFlags;
     byte[] MBFullyFlags;
 
-    /**********************************************************************/
+    // ----
 
     Coordinate[] FragCoordinates;
     FrArray frArray = new FrArray();

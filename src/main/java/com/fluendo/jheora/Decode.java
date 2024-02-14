@@ -30,38 +30,32 @@ import com.jcraft.jogg.Buffer;
 
 interface ExtractMVectorComponent {
 
-    public int extract(Buffer opb);
+    int extract(Buffer opb);
 }
 
 class ExtractMVectorComponentA implements ExtractMVectorComponent {
 
+    @Override
     public int extract(Buffer opb) {
         /* Get group to which coded component belongs */
         /*  Now extract the appropriate number of bits to identify the component */
-        switch (opb.readB(3)) {
-        case 0:
-            return 0;
-        case 1:
-            return 1;
-        case 2:
-            return -1;
-        case 3:
-            return 2 - (4 * opb.readB(1));
-        case 4:
-            return 3 - (6 * opb.readB(1));
-        case 5:
-            return (4 + opb.readB(2)) * -((opb.readB(1) << 1) - 1);
-        case 6:
-            return (8 + opb.readB(3)) * -((opb.readB(1) << 1) - 1);
-        case 7:
-            return (16 + opb.readB(4)) * -((opb.readB(1) << 1) - 1);
-        }
-        return 0;
+        return switch (opb.readB(3)) {
+            case 0 -> 0;
+            case 1 -> 1;
+            case 2 -> -1;
+            case 3 -> 2 - (4 * opb.readB(1));
+            case 4 -> 3 - (6 * opb.readB(1));
+            case 5 -> (4 + opb.readB(2)) * -((opb.readB(1) << 1) - 1);
+            case 6 -> (8 + opb.readB(3)) * -((opb.readB(1) << 1) - 1);
+            case 7 -> (16 + opb.readB(4)) * -((opb.readB(1) << 1) - 1);
+            default -> 0;
+        };
     }
 }
 
 class ExtractMVectorComponentB implements ExtractMVectorComponent {
 
+    @Override
     public int extract(Buffer opb) {
         /* Get group to which coded component belongs */
         return (opb.readB(5)) * -((opb.readB(1) << 1) - 1);
@@ -138,7 +132,7 @@ public final class Decode {
         pbi.FrameType = (byte) opb.readB(1);
 
         /* Quality (Q) index */
-        DctQMask = (int) opb.readB(6);
+        DctQMask = opb.readB(6);
 
         /* spare bit for possible additional Q indicies - should be 0 */
         opb.readB(1);
@@ -417,13 +411,13 @@ public final class Decode {
         }
     }
 
-    private final int ExtractToken(Buffer opb,
-                                   HuffEntry CurrentRoot) {
+    private int ExtractToken(Buffer opb,
+                             HuffEntry CurrentRoot) {
     /* Loop searches down through tree based upon bits read from the
        bitstream */
         /* until it hits a leaf at which point we have decoded a token */
         while (CurrentRoot.value < 0) {
-            CurrentRoot = CurrentRoot.Child[(int) opb.readB(1)];
+            CurrentRoot = CurrentRoot.Child[opb.readB(1)];
         }
         return CurrentRoot.value;
     }
@@ -441,7 +435,7 @@ public final class Decode {
          */
         if (pbi.ExtraBitLengths_VP3x[Token] > 0) {
             /* Extract the appropriate number of extra bits. */
-            ExtraBits = (int) pbi.opb.readB(pbi.ExtraBitLengths_VP3x[Token]);
+            ExtraBits = pbi.opb.readB(pbi.ExtraBitLengths_VP3x[Token]);
         }
 
         /* Take token dependant action */
@@ -507,8 +501,8 @@ public final class Decode {
         BlocksToDecode = pbi.CodedBlockIndex;
 
         /* Get the DC huffman table choice for Y and then UV */
-        int DcHuffChoice1 = (int) (pbi.opb.readB(Huffman.DC_HUFF_CHOICE_BITS) + Huffman.DC_HUFF_OFFSET);
-        int DcHuffChoice2 = (int) (pbi.opb.readB(Huffman.DC_HUFF_CHOICE_BITS) + Huffman.DC_HUFF_OFFSET);
+        int DcHuffChoice1 = pbi.opb.readB(Huffman.DC_HUFF_CHOICE_BITS) + Huffman.DC_HUFF_OFFSET;
+        int DcHuffChoice2 = pbi.opb.readB(Huffman.DC_HUFF_CHOICE_BITS) + Huffman.DC_HUFF_OFFSET;
 
         /* UnPack DC coefficients / tokens */
         int cbl = 0;
@@ -520,7 +514,7 @@ public final class Decode {
 
       /* Select the appropriate huffman table offset according to
          whether the token is from a Y or UV block */
-            if (FragIndex < (int) pbi.YPlaneFragments)
+            if (FragIndex < pbi.YPlaneFragments)
                 DcHuffChoice = DcHuffChoice1;
             else
                 DcHuffChoice = DcHuffChoice2;
@@ -543,8 +537,8 @@ public final class Decode {
         }
 
         /* Get the AC huffman table choice for Y and then for UV. */
-        int AcHuffIndex1 = (int) (pbi.opb.readB(Huffman.AC_HUFF_CHOICE_BITS) + Huffman.AC_HUFF_OFFSET);
-        int AcHuffIndex2 = (int) (pbi.opb.readB(Huffman.AC_HUFF_CHOICE_BITS) + Huffman.AC_HUFF_OFFSET);
+        int AcHuffIndex1 = pbi.opb.readB(Huffman.AC_HUFF_CHOICE_BITS) + Huffman.AC_HUFF_OFFSET;
+        int AcHuffIndex2 = pbi.opb.readB(Huffman.AC_HUFF_CHOICE_BITS) + Huffman.AC_HUFF_OFFSET;
 
         /* Unpack Lower AC coefficients. */
         while (EncodedCoeffs < 64) {
@@ -584,7 +578,7 @@ public final class Decode {
                     } else {
                         /* Else unpack an AC token */
                         /* Work out which huffman table to use, then decode a token */
-                        if (FragIndex < (int) pbi.YPlaneFragments)
+                        if (FragIndex < pbi.YPlaneFragments)
                             AcHuffChoice = AcHuffChoice1;
                         else
                             AcHuffChoice = AcHuffChoice2;

@@ -37,9 +37,9 @@ public final class iDCT {
 
     private int[] ip = new int[64];
 
-    private final void dequant_slow(short[] dequant_coeffs,
-                                    short[] quantized_list,
-                                    int[] DCT_block) {
+    private void dequant_slow(short[] dequant_coeffs,
+                              short[] quantized_list,
+                              int[] DCT_block) {
         for (int i = 0; i < 64; i++) {
             DCT_block[Constants.dequant_index[i]] = quantized_list[i] * dequant_coeffs[i];
       /*
@@ -54,7 +54,7 @@ public final class iDCT {
         }
     }
 
-    public final void IDctSlow(short[] InputData, short[] QuantMatrix, short[] OutputData) {
+    public void IDctSlow(short[] InputData, short[] QuantMatrix, short[] OutputData) {
         short[] op = OutputData;
 
         int _A, _B, _C, _D, _Ad, _Bd, _Cd, _Dd, _E, _F, _G, _H;
@@ -213,9 +213,9 @@ public final class iDCT {
      0  0  0  0  0  0  0  0
      *************************/
 
-    private final void dequant_slow10(short[] dequant_coeffs,
-                                      short[] quantized_list,
-                                      int[] DCT_block) {
+    private void dequant_slow10(short[] dequant_coeffs,
+                                short[] quantized_list,
+                                int[] DCT_block) {
         for (int i = 0; i < 32; i++)
             DCT_block[i] = 0;
 
@@ -223,7 +223,7 @@ public final class iDCT {
             DCT_block[Constants.dequant_index[i]] = quantized_list[i] * dequant_coeffs[i];
     }
 
-    public final void IDct10(short[] InputData, short[] QuantMatrix, short[] OutputData) {
+    public void IDct10(short[] InputData, short[] QuantMatrix, short[] OutputData) {
         short[] op = OutputData;
 
         int _A, _B, _C, _D, _Ad, _Bd, _Cd, _Dd, _E, _F, _G, _H;
@@ -346,10 +346,10 @@ public final class iDCT {
      0   0   0  0  0  0  0  0
      **************************/
 
-    public final void IDct1(short[] InputData,
-                            short[] QuantMatrix,
-                            short[] OutputData) {
-        short OutD = (short) ((int) (InputData[0] * QuantMatrix[0] + 15) >> 5);
+    public void IDct1(short[] InputData,
+                      short[] QuantMatrix,
+                      short[] OutputData) {
+        short OutD = (short) ((InputData[0] * QuantMatrix[0] + 15) >> 5);
 
         for (int loop = 0; loop < 64; loop++)
             OutputData[loop] = OutD;

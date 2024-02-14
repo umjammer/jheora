@@ -24,8 +24,12 @@
 
 package com.fluendo.jheora;
 
+import java.io.Serial;
+
+
 public class JTheoraException extends Exception {
 
+    @Serial
     private static final long serialVersionUID = 1L;
     private int error;
 
