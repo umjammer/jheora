@@ -1,4 +1,29 @@
-# jheora - patched
+[![Release](https://jitpack.io/v/umjammer/jheora.svg)](https://jitpack.io/#umjammer/jheora)
+[![Java CI](https://github.com/umjammer/jheora/actions/workflows/maven.yml/badge.svg)](https://github.com/umjammer/jheora/actions/workflows/maven.yml)
+[![CodeQL](https://github.com/umjammer/jheora/actions/workflows/codeql-analysis.yml/badge.svg)](https://github.com/umjammer/jheora/actions/workflows/codeql-analysis.yml)
+![Java](https://img.shields.io/badge/Java-17-b07219)
+
+# jheora
+
+<img alr="theora logo" src="https://upload.wikimedia.org/wikipedia/commons/5/57/Theora_logo_2007.svg" width="129 "/><sub><a href="https://www.theora.org/">© Xiph.Org</a></sub>
+
+Pure Java theora decoder. 
+
+## Install
+
+ * [maven](https://jitpack.io/#umjammer/jheora)
+
+## Usage
+
+## Reference
+
+## TODO
+
+* test
+
+---
+
+# [Original](http://fmj-sf.net/theora-java/getting_started.php)
 
 jheora is part of the Cortado streaming applet available from http://www.flumotion.net/cortado/
 While the Cortado applet is GPL, jheora is LGPL.
